@@ -6,6 +6,18 @@ This repository fulfills the requirements for **Lecture 4 HW1**:
 1. **GitHub Repository**: [DIC4---using-command-to-complete-random-geneator-to-streamlit](https://github.com/andy19588/DIC4---using-command-to-complete-random-geneator-to-streamlit)
 2. **Live Demo / Live Share**: [https://5f573a01497e29.lhr.life](https://5f573a01497e29.lhr.life)
 
+## Directory Structure / 專案架構
+```text
+.
+├── app.py                # Flask 後端應用程式 (API 路由 / SQLite 寫入) 與 Highcharts 頁面
+├── dashboard.py          # Streamlit 即時動態資料儀表板 (視覺化圖表)
+├── esp32_sim.py          # ESP32 與 DHT11 溫溼度感測器背景模擬程式 (定時發送 POST)
+├── aiotdb.db             # 儲存所有感測器數據的 SQLite3 本地資料庫檔案
+├── requirements.txt      # Python 專案相依套件安裝清單
+├── myconversation.md     # HW1 要求：AI 協作開發完整對話紀錄匯出原檔
+├── result.png            # Streamlit 專案首頁測試成果截圖
+└── README.md             # 專案說明文件 (包含啟動說明與架構講解)
+```
 ## Project Overview (MVC Architecture)
 - **Model**: SQLite3 (`aiotdb.db`) acts as our persistent data layer (equivalent to the MySQL schema mentioned in Notion).
 - **View**: 
