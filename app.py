@@ -12,7 +12,6 @@ def init_db():
         CREATE TABLE IF NOT EXISTS sensors (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             timestamp DATETIME,
-            device_id TEXT,
             temperature REAL,
             humidity REAL
         )
@@ -44,7 +43,6 @@ def simulator():
                 const hum = (Math.random() * 20 + 40).toFixed(1);
                 const rssi = Math.floor(Math.random() * 35) - 85;
                 const reqData = {
-                    device_id: "WEB_JS_SIM_01",
                     temperature: parseFloat(temp),
                     humidity: parseFloat(hum)
                 };
@@ -153,7 +151,6 @@ def sensor_data():
     if not data:
         return jsonify({"error": "No data provided"}), 400
     
-    device_id = data.get('device_id', 'unknown')
     temperature = data.get('temperature')
     humidity = data.get('humidity')
     
@@ -165,9 +162,9 @@ def sensor_data():
         cursor = conn.cursor()
         current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         cursor.execute('''
-            INSERT INTO sensors (device_id, temperature, humidity, timestamp)
-            VALUES (?, ?, ?, ?)
-        ''', (device_id, temperature, humidity, current_time))
+            INSERT INTO sensors (temperature, humidity, timestamp)
+            VALUES (?, ?, ?)
+        ''', (temperature, humidity, current_time))
         conn.commit()
         conn.close()
         return jsonify({"status": "success"}), 201

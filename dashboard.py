@@ -10,7 +10,7 @@ DB_NAME = 'aiotdb.db'
 def load_data():
     try:
         conn = sqlite3.connect(DB_NAME)
-        query = "SELECT timestamp, device_id, temperature, humidity FROM sensors ORDER BY timestamp DESC"
+        query = "SELECT timestamp, temperature, humidity FROM sensors ORDER BY timestamp DESC"
         df = pd.read_sql_query(query, conn)
         conn.close()
         # Convert timestamp to datetime

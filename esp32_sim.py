@@ -5,7 +5,6 @@ import random
 def generate_sensor_data():
     # Simulate DHT11 data and ESP32 WiFi metadata
     return {
-        "device_id": "ESP32_DEV_01",
         "temperature": round(random.uniform(20.0, 30.0), 1),
         "humidity": round(random.uniform(40.0, 60.0), 1)
     }
