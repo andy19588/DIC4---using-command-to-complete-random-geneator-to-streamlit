@@ -32,3 +32,11 @@ python app.py
 # Start Streamlit Dashboard
 streamlit run dashboard.py
 ```
+
+## How to Stop / 關閉伺服器
+若在一般的終端機 (Terminal) 中執行，請在該視窗按下 `Ctrl + C` 即可中斷程式。
+
+若你在背景執行或是遇到「Port is already in use (連接埠被佔用)」的錯誤，可以直接開啟新的 Windows PowerShell 終端機並執行以下指令，強制終止所有運行中的 Python 處理程序：
+```powershell
+taskkill /F /IM python.exe
+```
