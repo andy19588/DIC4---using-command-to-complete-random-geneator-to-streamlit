@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
@@ -10,12 +11,10 @@ def init_db():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS sensors (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            timestamp DATETIME,
             device_id TEXT,
             temperature REAL,
-            humidity REAL,
-            wifi_ssid TEXT,
-            wifi_rssi INTEGER
+            humidity REAL
         )
     ''')
     conn.commit()
@@ -47,9 +46,7 @@ def simulator():
                 const reqData = {
                     device_id: "WEB_JS_SIM_01",
                     temperature: parseFloat(temp),
-                    humidity: parseFloat(hum),
-                    wifi_ssid: "JS_Web_Net",
-                    wifi_rssi: rssi
+                    humidity: parseFloat(hum)
                 };
                 
                 fetch('/sensor', {
@@ -159,8 +156,6 @@ def sensor_data():
     device_id = data.get('device_id', 'unknown')
     temperature = data.get('temperature')
     humidity = data.get('humidity')
-    wifi_ssid = data.get('wifi_ssid', 'unknown')
-    wifi_rssi = data.get('wifi_rssi', 0)
     
     if temperature is None or humidity is None:
         return jsonify({"error": "Missing temperature or humidity"}), 400
@@ -168,10 +163,11 @@ def sensor_data():
     try:
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
+        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         cursor.execute('''
-            INSERT INTO sensors (device_id, temperature, humidity, wifi_ssid, wifi_rssi)
-            VALUES (?, ?, ?, ?, ?)
-        ''', (device_id, temperature, humidity, wifi_ssid, wifi_rssi))
+            INSERT INTO sensors (device_id, temperature, humidity, timestamp)
+            VALUES (?, ?, ?, ?)
+        ''', (device_id, temperature, humidity, current_time))
         conn.commit()
         conn.close()
         return jsonify({"status": "success"}), 201

@@ -7,9 +7,7 @@ def generate_sensor_data():
     return {
         "device_id": "ESP32_DEV_01",
         "temperature": round(random.uniform(20.0, 30.0), 1),
-        "humidity": round(random.uniform(40.0, 60.0), 1),
-        "wifi_ssid": "AIoT_Net",
-        "wifi_rssi": random.randint(-85, -50)
+        "humidity": round(random.uniform(40.0, 60.0), 1)
     }
 
 def main():
