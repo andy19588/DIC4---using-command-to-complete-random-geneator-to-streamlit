@@ -2,7 +2,7 @@
 
 This repository fulfills the requirements for **Lecture 4 HW1**:
 1. **GitHub Repository**: [DIC4---using-command-to-complete-random-geneator-to-streamlit](https://github.com/andy19588/DIC4---using-command-to-complete-random-geneator-to-streamlit)
-2. **Live Demo / Live Share**: [https://f97c7c6d646fde.lhr.life](https://f97c7c6d646fde.lhr.life)
+2. **Live Demo / Live Share**: [https://f8004b179b525e.lhr.life](https://f8004b179b525e.lhr.life)
 
 ## Project Overview (MVC Architecture)
 - **Model**: SQLite3 (`aiotdb.db`) acts as our persistent data layer (equivalent to the MySQL schema mentioned in Notion).
