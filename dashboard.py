@@ -1,20 +1,23 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
+import time
 
-st.set_page_config(page_title="AIoT Dashboard", layout="wide")
-st.title("ESP32 Sensor Dashboard")
+st.set_page_config(page_title="AIoT Sensor Dashboard", layout="wide")
+st.title("🌡️ DHT11 Sensor Dashboard")
+st.caption("Real-time temperature & humidity from SQLite3 (aiotdb.db)")
 
 DB_NAME = 'aiotdb.db'
 
 def load_data():
+    """Load sensor data from SQLite3 database."""
     try:
         conn = sqlite3.connect(DB_NAME)
-        query = "SELECT timestamp, temperature, humidity FROM sensors ORDER BY timestamp DESC"
+        query = "SELECT id, timestamp, temperature, humidity FROM sensors ORDER BY id DESC"
         df = pd.read_sql_query(query, conn)
         conn.close()
-        # Convert timestamp to datetime
-        df['timestamp'] = pd.to_datetime(df['timestamp'])
+        if not df.empty:
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
         return df
     except Exception as e:
         st.error(f"Error loading database: {e}")
@@ -23,44 +26,43 @@ def load_data():
 df = load_data()
 
 if df.empty:
-    st.warning("No data available yet.")
+    st.warning("No data available yet. Please start esp32_sim.py first.")
 else:
-    # KPIs
+    # --- KPI Metrics ---
     latest = df.iloc[0]
-    
-    col1, col2 = st.columns(2)
+    total_records = len(df)
+
+    col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("Latest Temperature", f"{latest['temperature']:.1f} °C")
+        st.metric("🌡️ Latest Temperature", f"{latest['temperature']:.1f} °C")
     with col2:
-        st.metric("Latest Humidity", f"{latest['humidity']:.1f} %")
+        st.metric("💧 Latest Humidity", f"{latest['humidity']:.1f} %")
+    with col3:
+        st.metric("📊 Total Records", f"{total_records}")
 
     st.markdown("---")
-    
-    # Charts
-    chart_col1, chart_col2 = st.columns(2)
-    
-    df_chart = df.copy()
+
+    # --- Line Charts (show latest 50 records) ---
+    df_chart = df.head(50).copy()
+    df_chart = df_chart.sort_values('timestamp')
     df_chart.set_index('timestamp', inplace=True)
-    df_chart = df_chart.sort_index()
+
+    chart_col1, chart_col2 = st.columns(2)
 
     with chart_col1:
         st.subheader("Temperature History")
         st.line_chart(df_chart['temperature'], height=300)
-        
+
     with chart_col2:
         st.subheader("Humidity History")
         st.line_chart(df_chart['humidity'], height=300)
 
     st.markdown("---")
-    
-    # Table
-    st.subheader("Raw Data")
-    st.dataframe(df.head(100), use_container_width=True)
-    
-    # Auto-refresh helper button
-    if st.button("Refresh Data"):
-        st.rerun()
 
-import time
+    # --- Raw Data Table ---
+    st.subheader("📋 Raw Data (Latest 100 records)")
+    st.dataframe(df.head(100), width='stretch')
+
+# --- Auto Refresh every 2 seconds ---
 time.sleep(2)
 st.rerun()

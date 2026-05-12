@@ -1,44 +1,52 @@
-# DIC4 MVC Web-MySQL-DB-Flask AIoT Demo
+# DIC4 HW1 - DHT11 Random Sensor Simulator to Streamlit
 
-![Streamlit Dashboard Result](result.png)
+## Project Overview
 
-This repository fulfills the requirements for **Lecture 4 HW1**:
-1. **GitHub Repository**: [DIC4---using-command-to-complete-random-geneator-to-streamlit](https://github.com/andy19588/DIC4---using-command-to-complete-random-geneator-to-streamlit)
-2. **Live Demo / Live Share**: [https://f8004b179b525e.lhr.life](https://f8004b179b525e.lhr.life)
+This project simulates a DHT11 temperature and humidity sensor using Python random number generation. Data is inserted into a SQLite3 database (`aiotdb.db`) every **2 seconds** and visualized dynamically using **Streamlit**.
 
-## Project Overview (MVC Architecture)
-- **Model**: SQLite3 (`aiotdb.db`) acts as our persistent data layer (equivalent to the MySQL schema mentioned in Notion).
-- **View**: 
-  1. **Streamlit Dashboard** (`dashboard.py`): Real-time KPI and line charts.
-  2. **Highcharts View** (`/highcharts`): A pure HTML/JS page rendering a Line chart and a Pie chart example.
-- **Controller**: **Flask** (`app.py`), which orchestrates routes, handles JSON POSTs, and serves endpoints.
+## Architecture
 
-## Features implemented from Notion
-* **Step 1 (Web Fundamentals):** JS-based random simulator sending POSTs via Fetch API to Flask.
-* **Step 2 (Flask Python Web with DB Interaction):** Flask backend interacting securely with a SQL database using the Python connector.
-* **Step 3 (Database Schema):** `sensors` table collecting `temperature`, `humidity`, and generating auto-incrementing timestamps.
-* **Step 4 (Data Visualization):** 
-  * Included a `show()` function for a Pie Chart & Line chart using **Highcharts**.
-  * Streamlit rendering dynamic line charts for temperature and humidity.
-* **Step 5 (Dynamic Data Flow):** Periodic AJAX requests updating the dashboard automatically every 2 seconds without page reloading.
+```
+esp32_sim.py (Python)  →  aiotdb.db (SQLite3)  →  dashboard.py (Streamlit)
+   Random Generator          sensors table           Line Charts + KPIs
+   Every 2 seconds           Auto-created            Auto-refresh 2s
+```
 
-## Setup Instructions
+- **`esp32_sim.py`**: Generates **1 record every 2 seconds** with random temperature (20–30°C) and humidity (40–60%) and inserts directly into SQLite3.
+- **`aiotdb.db`**: SQLite3 database with a `sensors` table (id, timestamp, temperature, humidity).
+- **`dashboard.py`**: Streamlit dashboard that reads from the database and displays real-time line charts for temperature and humidity, with auto-refresh every 2 seconds.
+
+## sensors Table Schema
+
+| Column      | Type    | Description                        |
+|-------------|---------|------------------------------------|
+| id          | INTEGER | Primary key, auto-increment        |
+| timestamp   | DATETIME| Record creation time               |
+| temperature | REAL    | Simulated temperature (20–30°C)    |
+| humidity    | REAL    | Simulated humidity (40–60%)        |
+
+## Setup & Run
+
 ```bash
-python -m venv venv
-.\venv\Scripts\activate
+# Install dependencies
 pip install -r requirements.txt
 
-# Start Flask Backend & Web Simulator
-python app.py
+# Terminal 1: Start the sensor simulator
+python esp32_sim.py
 
-# Start Streamlit Dashboard
-streamlit run dashboard.py
+# Terminal 2: Start the Streamlit dashboard
+python -m streamlit run dashboard.py
 ```
 
-## How to Stop / 關閉伺服器
-若在一般的終端機 (Terminal) 中執行，請在該視窗按下 `Ctrl + C` 即可中斷程式。
+Then open http://localhost:8501 in your browser to see the dashboard.
 
-若你在背景執行或是遇到「Port is already in use (連接埠被佔用)」的錯誤，可以直接開啟新的 Windows PowerShell 終端機並執行以下指令，強制終止所有運行中的 Python 處理程序：
-```powershell
-taskkill /F /IM python.exe
-```
+## Requirements
+
+- Python 3.x
+- streamlit
+- pandas
+- sqlite3 (built-in)
+
+## GitHub Repository
+
+[DIC4---using-command-to-complete-random-geneator-to-streamlit](https://github.com/andy19588/DIC4---using-command-to-complete-random-geneator-to-streamlit)
