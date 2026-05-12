@@ -2,7 +2,7 @@
 
 ## 🔗 Live Demo
 
-👉 [**Click here for Live Demo**](https://dic4---using-command-to-complete-random-geneator-to-streamlit.streamlit.app/)
+👉 [**Click here for Live Demo**](https://dic4---using-command-to-complete-random-geneator-to-app-wzrxat.streamlit.app/)
 
 ## Project Overview
 
